@@ -20,7 +20,7 @@ c = conn.cursor()
 
 # Creating a new SQLite table with 1 column
 c.execute('''CREATE TABLE timelog 
-	(ID INTEGER PRIMARY KEY, RFID TEXT, tstamp INTEGER, inout INTEGER)''')
+	(ID INTEGER PRIMARY KEY AUTOINCREMENT, RFID TEXT, tstamp INTEGER, inout INTEGER)''')
 
 
 # Committing changes and closing the connection to the database file
