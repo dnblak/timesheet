@@ -15,18 +15,19 @@ for row in c.execute("SELECT ID, RFID, tstamp, inout FROM timelog"):
         tstamp  = row[2]
         inout   = row[3]
         datestamp = datetime.datetime.fromtimestamp(int(row[2])).strftime('%Y-%m-%d %H:%M:%S')
-        if (inout == 0):
-            io = "Out"
-        else:
-            io = "In"
+
         if (inout == 1):
             start = tstamp
+            io = "In"
+            unxtme = time.time()
+            elapsed = unxtme - start
         else:
+            io = "Out"
             elapsed = tstamp - start
-            print elapsed
-            m, s = divmod(elapsed, 60)
-            h, m = divmod(m, 60)
-            print "%d:%02d:%02d" % (h, m, s)
+        print elapsed
+        m, s = divmod(elapsed, 60)
+        h, m = divmod(m, 60)
+        print "Time Logged: %d:%02d:%02d" % (h, m, s)
 
 conn.commit()
 conn.close()
