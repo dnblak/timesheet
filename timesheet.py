@@ -7,6 +7,7 @@ serPort = usePort()
 serial = serial.Serial(serPort, baudrate=9600)
 
 sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
+logtbl = 'timelogT'
 code = ''
 
 while True:
@@ -25,13 +26,13 @@ while True:
         c = conn.cursor()
         
         # Get the last inserted ID
-        c.execute("SELECT * from SQLITE_SEQUENCE;")
+        c.execute("SELECT * from SQLITE_SEQUENCE WHERE `name`='"+logtbl+"';")
         lastID = c.fetchone()
         lastIDs = str(lastID[1])
-        
+
         # In = 1; Out = 0
         # Select the last row of data
-        c.execute("SELECT RFID, inout FROM timelog WHERE ID = "+lastIDs)
+        c.execute("SELECT RFID, inout FROM "+logtbl+" WHERE ID = "+lastIDs)
         lastData = c.fetchone()
         print lastData[1]
         if (lastData[1] == 0):
@@ -39,15 +40,17 @@ while True:
         else:
             # Check to see if the RFID card changed.
             if (lastData[0] != codeout):
-                c.execute("INSERT INTO `main`.`timelog` (`RFID`, `tstamp`, `inout`) VALUES ('"+lastData[0]+"','"+unxtme+"',0)")
+                c.execute("INSERT INTO `main`.`"+logtbl+"` (`RFID`, `tstamp`, `inout`) VALUES ('"+lastData[0]+"','"+unxtme+"',0)")
                 newInOut = "1"
             else:
                 newInOut = "0"
         
-        c.execute("INSERT INTO `main`.`timelog` (`RFID`, `tstamp`, `inout`) VALUES ('"+codeout+"','"+unxtme+"',"+newInOut+")")
+        c.execute("INSERT INTO `main`.`"+logtbl+"` (`RFID`, `tstamp`, `inout`) VALUES ('"+codeout+"','"+unxtme+"',"+newInOut+")")
         conn.commit()
         conn.close()
         code =''
         
     else:
         code = code + data
+
+serial.close()
