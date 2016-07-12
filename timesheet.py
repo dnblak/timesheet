@@ -7,7 +7,7 @@ serPort = usePort()
 serial = serial.Serial(serPort, baudrate=9600)
 
 sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
-logtbl = 'timelogT'
+logtbl = 'timelog'
 code = ''
 
 while True:
