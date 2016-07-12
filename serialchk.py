@@ -5,19 +5,18 @@
 
 import serial.tools.list_ports
 
-
-
 def usePort():
-    ports = list(serial.tools.list_ports.comports())
-    portIdentifyer = "FT232R"
+    usePort = ''
+    while usePort != '':
+        ports = list(serial.tools.list_ports.comports())
+        portIdentifyer = "FT232R"
     
-    portnames = []
-    for p in ports:
-        portnames.append(str(p))
+        portnames = []
+        for p in ports:
+            portnames.append(str(p))
 
-        for p in portnames:
-            if p.find(portIdentifyer) != -1:
-                sections = p.split(" - ")
-                usePort = sections[0]
-
-    return usePort
+            for p in portnames:
+                if p.find(portIdentifyer) != -1:
+                    sections = p.split(" - ")
+                    usePort = sections[0]
+                    return usePort
