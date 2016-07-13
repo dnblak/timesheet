@@ -33,9 +33,6 @@ for row in c.execute("SELECT ID, RFID, tstamp, inout FROM timelog"):
     inout   = row[3]
     datestamp = datetime.datetime.fromtimestamp(int(row[2])).strftime('%Y-%m-%d %H:%M:%S')
     day = datetime.datetime.fromtimestamp(int(row[2])).strftime('%d')
-    if (day != lastday):
-        dayTime(elapsedDay)
-        elapsedDay = 0
     
     if (inout == 1):
         start = tstamp
@@ -51,7 +48,10 @@ for row in c.execute("SELECT ID, RFID, tstamp, inout FROM timelog"):
     if (inout == 0):
         print "Time Logged: %d:%02d:%02d" % (h, m, s)
         elapsedDay += elapsed
-    
+
+    if (day != lastday):
+        dayTime(elapsedDay)
+        elapsedDay = 0
     
     lastday = day
 
