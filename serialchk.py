@@ -22,7 +22,7 @@ def serial_ports():
     for port in ports:
         try:
             s = serial.Serial(port)
-            
+            print port
             s.close()
             result.append(port)
         except (OSError, serial.SerialException):
