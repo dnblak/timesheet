@@ -1,23 +1,19 @@
 import time, sys, serial, datetime, sqlite3, re
-from serialchk import usePort, serial_ports
+from serialchk import usePort, serial_ports, serPort
 
 # Find the serial port used by RFID
 
 sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
 logtbl = 'timelogT'
 code = ''
+    
+myPort = serPort('FT232R')
+print myPort
 
-serPort = usePort()
-print serPort
 
-otherPort = serial_ports()
-print otherPort[1]
+serial = serial.Serial(myPort, baudrate=9600)
 
-"""\
-
-serial = serial.Serial(serPort, baudrate=9600)
-
-while True:
+while serial.read():
 
     data = serial.read()
     
@@ -60,9 +56,7 @@ while True:
         code =''
         
     else:
-        code = code + data
+        code += data
     
-    serial.close()
-
-"""
+serial.close()
 

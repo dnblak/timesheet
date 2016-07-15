@@ -4,8 +4,10 @@
 
 import sys
 import glob
-import serial
+import serial.tools.list_ports
 
+import serial
+from serial.tools import list_ports
 
 def serial_ports():
     if sys.platform.startswith('win'):
@@ -29,24 +31,41 @@ def serial_ports():
             pass
     return result
 
-def usePort():
-    usePort = ''
-    while usePort == '':
-        ports = list(serial.tools.list_ports.comports())
-        portIdentifyer = "FT232R"
-        comMethod = "tty"
-    
-        portnames = []
-        for p in ports:
-            portnames.append(str(p))
+def serPort2(desc):
+    result = []
+    for port in list(list_ports.comports()):
+        try:
+            s = serial.Serial(port[0])
+            s.close()
+            
+            broken = port[1].split(" ")
+            if (broken[0] == desc):
+                return port[0]
+        except (OSError, serial.SerialException):
+            pass
 
-            for p in portnames:
-                print p
-                if p.find(portIdentifyer) != -1:
-                    sections = p.split(" - ")
-                    print sections
-                    usePort = sections[0]
-                    print usePort
-                    subSec = usePort[0].split(".")
-                    if subSec[0] == "tty":
-                        return usePort
+
+
+def serPort(desc):
+    result = []
+    for port in list(list_ports.comports()):
+        broken = port[1].split(" ")
+        if (broken[0] == desc):
+            return port[0]
+        # https://forum.pjrc.com/threads/25295-Automatically-find-a-Teensy-Board-with-Python-and-PySerial
+
+def usePort():
+    ports = list(serial.tools.list_ports.comports())
+    portIdentifyer = "FT232R"
+    
+    portnames = []
+    for p in ports:
+        portnames.append(str(p))
+
+        for p in portnames:
+            print p
+            if p.find(portIdentifyer) != -1:
+                sections = p.split(" - ")
+                usePort = sections[0]
+
+    return usePort
