@@ -8,6 +8,7 @@ import serial.tools.list_ports
 
 
 def usePort():
+    
     ports = list(serial.tools.list_ports.comports())
     portIdentifyer = "FT232R"
     

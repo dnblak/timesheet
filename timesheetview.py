@@ -7,8 +7,12 @@ def secTOhms(elapse):
     return h, m, s
 
 def dayTime(elapseTime):
+    eightHours = 8*60*60
+    timeLeft   = eightHours - elapseTime
     h, m, s = secTOhms(elapseTime)
-    print "Total time for the Day: %d:%02d:%02d" % (h, m, s)
+    hL, mL, sL = secTOhms(timeLeft)
+    print "Total time for the Day: %d:%02d:%02d" % (h, m, s); 
+    print "Time Left for the Day: %d:%02d:%02d" % (hL, mL, sL); 
     print '----------'
 
 sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
@@ -44,14 +48,15 @@ for row in c.execute("SELECT ID, RFID, tstamp, inout FROM timelog"):
     h, m, s = secTOhms(elapsed)
    
 
+    if (day != lastday):
+        dayTime(elapsedDay)
+        elapsedDay = 0
+        
+    
     print row[0], ": ", datestamp, " : ", io, row[3]
     if (inout == 0):
         print "Time Logged: %d:%02d:%02d" % (h, m, s)
         elapsedDay += elapsed
-
-    if (day != lastday):
-        dayTime(elapsedDay)
-        elapsedDay = 0
     
     lastday = day
 
@@ -62,7 +67,10 @@ if (inout == 1):
     print "Current working time: %d:%02d:%02d" % (h, m, s)
     elapsedDay += elapsed
     dayTime(elapsedDay)
-    
+
+if (day == lastday and inout == 0):
+    dayTime(elapsedDay)
+
 conn.commit()
 conn.close()
 
