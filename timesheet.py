@@ -6,7 +6,7 @@ serPort = usePort()
 
 serial = serial.Serial(serPort, baudrate=9600)
 
-sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
+sqlite_file = '/Volumes/ZAI-Encrypted/notes/timesheet/timesheet.sqlite'
 logtbl = 'timelog'
 code = ''
 
@@ -41,11 +41,16 @@ while True:
             # Check to see if the RFID card changed.
             if (lastData[0] != codeout):
                 c.execute("INSERT INTO `main`.`"+logtbl+"` (`RFID`, `tstamp`, `inout`) VALUES ('"+lastData[0]+"','"+unxtme+"',0)")
+                ## This did not work for string replace to sanatize
+                #c.execute("""INSERT INTO `main`.`%s` (`RFID`, `tstamp`, `inout`) VALUES ('%s','%s',0)""" % (logtbl,lastData[0],unxtme))
                 newInOut = "1"
             else:
                 newInOut = "0"
         
+        #print (logtbl,codeout,unxtme,newInOut)
         c.execute("INSERT INTO `main`.`"+logtbl+"` (`RFID`, `tstamp`, `inout`) VALUES ('"+codeout+"','"+unxtme+"',"+newInOut+")")
+        ## This did not work for string replace to sanatize
+        #c.execute("""INSERT INTO `main`.%s (`RFID`, `tstamp`, `inout`) VALUES (%s,'%s',%s)""" % (logtbl,codeout,unxtme,newInOut))
         conn.commit()
         conn.close()
         code =''

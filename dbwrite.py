@@ -1,6 +1,6 @@
 import sqlite3
 
-sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
+sqlite_file = '/Volumes/ZAI-Encrypted/notes/timesheet/timesheet.sqlite'
 
 tblname = 'timelog'  # name of the table to be created
 

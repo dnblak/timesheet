@@ -1,21 +1,26 @@
 import time, sys, datetime, sqlite3
 
 def secTOhms(elapse):
+    if (elapse < 0):
+        posneg = "-"
+        elapse = elapse*(-1)
+    else:
+        posneg = "+"
     h=m=s=0
     m, s = divmod(elapse, 60)
     h, m = divmod(m, 60)
-    return h, m, s
+    return h, m, s, posneg
 
 def dayTime(elapseTime):
     eightHours = 8*60*60
     timeLeft   = eightHours - elapseTime
-    h, m, s = secTOhms(elapseTime)
-    hL, mL, sL = secTOhms(timeLeft)
+    h, m, s, pn = secTOhms(elapseTime)
+    hL, mL, sL, pn = secTOhms(timeLeft)
     print "Total time for the Day: %d:%02d:%02d" % (h, m, s); 
-    print "Time Left for the Day: %d:%02d:%02d" % (hL, mL, sL); 
+    print "Time Left for the Day:"+ pn +"%d:%02d:%02d" % (hL, mL, sL); 
     print '----------'
 
-sqlite_file = '/Volumes/ZAI-Enrypted/notes/timesheet/timesheet.sqlite'
+sqlite_file = '/Volumes/ZAI-Encrypted/notes/timesheet/timesheet.sqlite'
 
 conn = sqlite3.connect(sqlite_file)
 c = conn.cursor()
@@ -45,7 +50,7 @@ for row in c.execute("SELECT ID, RFID, tstamp, inout FROM timelog"):
         io = "Out"
         elapsed = tstamp - start
 
-    h, m, s = secTOhms(elapsed)
+    h, m, s, pn = secTOhms(elapsed)
    
 
     if (day != lastday):
@@ -63,7 +68,7 @@ for row in c.execute("SELECT ID, RFID, tstamp, inout FROM timelog"):
 if (inout == 1):
     unxtme = time.time()
     elapsed = unxtme - start
-    h, m, s = secTOhms(elapsed)
+    h, m, s, pn = secTOhms(elapsed)
     print "Current working time: %d:%02d:%02d" % (h, m, s)
     elapsedDay += elapsed
     dayTime(elapsedDay)
